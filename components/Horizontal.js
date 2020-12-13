@@ -50,6 +50,7 @@ Horizontal.propTypes= {
     title: PropTypes.string.isRequired,
     releaseDate: PropTypes.string,
     overview: PropTypes.string.isRequired,
+    poster: PropTypes.string
 }
 
 export default Horizontal;
