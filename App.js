@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AppLoading from 'expo-app-loading';
-import { Image } from "react-native";
+import { Image, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { Asset } from "expo-asset";
 import { Ionicons } from "@expo/vector-icons";
@@ -27,12 +27,16 @@ export default function App() {
     const fonts = cacheFonts([Ionicons.font]);
     return Promise.all([...images, ...fonts]);
   };
+  
   const onFinish = () => setIsReady(true);
-  return isReady ?
-    (<NavigationContainer>
+  return isReady ? (
+    <>
+    <NavigationContainer>
       <Stack />
-    </NavigationContainer>)
-    : (
+    </NavigationContainer>
+    <StatusBar barStyle="light-content" />
+    </>
+    ) : (
       <AppLoading
         startAsync={loadAssets}
         onFinish={onFinish}

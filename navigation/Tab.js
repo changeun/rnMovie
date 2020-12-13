@@ -1,13 +1,56 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import Detail from '../screens/Detail';
-import Home from '../screens/Home';
+import React, { useLayoutEffect } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from "@expo/vector-icons";
+import Movies from '../screens/Movies/MoviesContainer';
+import Tv from '../screens/Tv/TvContainer';
+import Search from '../screens/Search';
+import Favs from '../screens/Favs';
+import { Platform } from 'react-native';
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+const getHeaderName = route => 
+    route?.state?.routeNames[route.state.index] || "Movies";
 
-export default () => (
-    <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Detail" component={Detail} />
-    </Stack.Navigator>
-);
+export default ({navigation, route}) => {
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: getHeaderName(route)
+        });
+    }, [route]);
+    return (
+        <Tab.Navigator
+            screenOptions={({route}) => ({
+                tabBarIcon: ({focused}) => {
+                    let iconName = Platform.OS === "ios" ? "ios-" : "md-";
+                    if(route.name === "Movies") {
+                        iconName += "film";
+                    } else if(route.name === "TV") {
+                        iconName += "tv";
+                    } else if(route.name === "Search") {
+                        iconName += "search";
+                    } else if(route.name === "Discovery") {
+                        iconName += "heart";
+                    }
+                    return (
+                        <Ionicons 
+                            name={iconName}
+                            color={focused ? "white" : "grey"} 
+                            size={26} 
+                        />
+                    );
+                }
+            })}
+            tabBarOptions={{
+                showLabel: false,
+                style:{
+                    backgroundColor: 'black',
+                    borderTopColor: 'black'
+                }
+            }}>
+            <Tab.Screen name="TV" component={Tv} />
+            <Tab.Screen name="Movies" component={Movies} />
+            <Tab.Screen name="Search" component={Search} />
+            <Tab.Screen name="Discovery" component={Favs} />
+        </Tab.Navigator>
+    );
+}
